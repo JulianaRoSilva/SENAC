@@ -107,6 +107,13 @@ function usarPocao(personagem){
     personagem.pocao--;
 }
 
+// função que vai receber um array de INIMIGOS e retornar o OBJETO do inimigo escolhido
+// Utilizar DICA DO SOR para atribuir essa função da hora de escolher o inimigo na batalha
+function gerarInimigo(inimigos){
+    let index = Math.floor(Math.random() * inimigos.length);
+    return inimigos[index];
+}
+
 function conbateMenu(){
 
 }
@@ -117,43 +124,123 @@ function comecarCombate(){
 
 function criarPersonagem() {
 
-    let nome = ask.question('Digite o nome do seu personagem:')
+    let valido = false // variavel para controlar que o usuário digite uma opção de classe Válida
+    let jogadorGerado;
+    let nome;
+
+
+    console.clear();
+
+    while(!valido){
+
+        console.clear();
+
+        console.log(`
+========================================================================================================================
+                                            ⚔️ SHADOWS OF BACKBERRY ⚔️
+========================================================================================================================
+
+`);
+    nome = ask.question('Choose your character`s name: ');
+
+    console.clear();
+
+    console.log(`
+========================================================================================================================
+                                            ⚔️ SHADOWS OF BACKBERRY ⚔️
+========================================================================================================================
+
+    Confirm name ${nome.toUpperCase()}?
+
+    [1] - Yes
+    [0] - Change name
+
+`);
+    
+    let escolha = Number(ask.question());
+
+    if (escolha == 1) {
+        valido = true;
+    }   
+} 
 
     console.clear()
 
-    console.log(`
-        Escolha uma classe: 
-        1 - Mago
-        2 - Ladrao
-        3 - Guerreiro
+    valido = false;
+    while(!valido){
 
-        `)
+    console.clear()
+
+console.log(`
+╔══════════════════════╗   ╔══════════════════════╗   ╔══════════════════════╗
+║       🧙 MAGE        ║   ║      🗡️  ROGUE        ║   ║      ⚔️  WARRIOR      ║
+╠══════════════════════╣   ╠══════════════════════╣   ╠══════════════════════╣
+║ Health: 150          ║   ║ Health: 200          ║   ║ Health: 230          ║
+║ Defense: 4           ║   ║ Defense: 7           ║   ║ Defense: 5           ║
+║ Potions: 5           ║   ║ Potions: 4           ║   ║ Potions: 3           ║
+║                      ║   ║                      ║   ║                      ║
+║ Damage: 10 - 20      ║   ║ Damage: 5 - 15       ║   ║ Damage: 8 - 15       ║
+║                      ║   ║                      ║   ║                      ║
+║ Master of magic      ║   ║ Fast and stealthy    ║   ║ Strong and durable   ║
+╚══════════════════════╝   ╚══════════════════════╝   ╚══════════════════════╝
+
+
+========================================================================
+
+        ${nome.toUpperCase()}, CHOOSE YOUR CLASS
+
+                               [1] MAGE
+                               [2] ROGUE
+                               [3] WARRIOR
+
+========================================================================
+`);
 
         let opcao = Number(ask.question());
-
+    
+    
     switch (opcao) {
         case 1:
-            personagem = mago;
+            jogadorGerado = mago;
+            valido = true;
             break;
         case 2:
-            personagem = ladrao;
+            jogadorGerado = ladrao;
+            valido = true;
             break;
         case 3:
-            personagem = guerreiro;
+            jogadorGerado = guerreiro;
+            valido = true;
             break;
         default:
             console.log('Opcao inválida!')
+            ask.question('Pressiona ENTER para escolher novamente! ');
     }
+}
+    jogadorGerado.nomeJogador = nome;
 
-    return personagem;
+    console.clear(
+
+    )
+
+    console.log(`
+
+${nome.toUpperCase()}
+Class chosen: ${jogadorGerado.nomeClasse.toUpperCase()}
+Health: ${jogadorGerado.vida}
+Defense: ${jogadorGerado.defesa}
+Number of potions: ${jogadorGerado.pocao}
+   `)
+
+   ask.question(`Press ENTER to continue...`)
+    return jogadorGerado;
 }
 
-// função que vai receber um array de INIMIGOS e retornar o OBJETO do inimigo escolhido
-// Utilizar DICA DO SOR para atribuir essa função da hora de escolher o inimigo na batalha
-function gerarInimigo(inimigos){
-    let index = Math.floor(Math.random() * inimigos.length);
-    return inimigos[index];
-}
+
+
+let personagem = criarPersonagem();
+
+let inimigo;
 
 
 
