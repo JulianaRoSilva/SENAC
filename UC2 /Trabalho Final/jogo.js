@@ -378,11 +378,11 @@ console.log(`
     }
 
     if (character.health <= 0) {
-        console.log('YOU DIE!');
+        console.log('YOU DIED!');
 
-    } else if (qtdeEnemies < 5) {
+    } else if (vitory < 5) {
 
-        qtdeEnemies++;
+        vitory++;
 
         console.log(`
 \x1b[35m=====================================\x1b[0m
@@ -392,12 +392,12 @@ console.log(`
 \x1b[31m${enemy.name}\x1b[0m
 \x1b[35m=====================================\x1b[0m
 `);
-        if (qtdeEnemies < 5) {
-            console.log(`\x1b[33mThere are still ${5 - qtdeEnemies} battles left!\x1b[0m`);
+        if (vitory < 5) {
+            console.log(`\x1b[33mThere are still ${5 - vitory} battles left!\x1b[0m`);
         }
         ask.question('\x1b[33mPress ENTER for the next battle\x1b[0m');
     }
-    if (qtdeEnemies === 5) {
+    if (vitory === 5) {
 console.log(`
 \x1b[34m====================================================\x1b[0m
 \x1b[32mALL THE ENEMIES IN YOUR JOURNEY HAVE BEEN DEFEATED!\x1b[0m
@@ -407,16 +407,14 @@ console.log(`
     }
 }
 
+// variável para controlar vitórias do jogador sobre os mosntros. Precisa ser 5 vitórias para encerrar o código
+let vitory = 0;
 
 
-
-let qtdeEnemies = 0;
-let menu = 1
-
-while (menu != 0 && qtdeEnemies < 5 ) {
-
+while (true) {
+    
     console.clear()
-
+    
     console.log(`
 \x1b[35m==================================================\x1b[0m
 \x1b[33m           ⚔️ SHADOWS OF BACKBERRY ⚔️\x1b[0m
@@ -431,7 +429,7 @@ while (menu != 0 && qtdeEnemies < 5 ) {
 \x1b[35m==================================================\x1b[0m
 `);
 
-    menu = Number(ask.question());
+    let menu = Number(ask.question());
 
     switch (menu) {
         case 1:
@@ -439,7 +437,7 @@ while (menu != 0 && qtdeEnemies < 5 ) {
             let character = createCharacter();
             console.log('O jogo Começou!');
 
-            while (character.health > 0 && qtdeEnemies < 5) {
+            while (character.health > 0 && vitory < 5) {
 
                 console.clear();
 
@@ -463,8 +461,7 @@ while (menu != 0 && qtdeEnemies < 5 ) {
                     `)
                 let decision = Number(ask.question())
                 if (decision === 2){
-                    menu = 0;
-
+                    process.exit();
                 }
             }
             break;
@@ -536,5 +533,4 @@ Recover +30 HP during battle.
             break;
     }
 }
-
 
