@@ -25,6 +25,7 @@ let warrior = {
     attack: attackWarrior
 }
 
+// array de objetos de inimigos
 let enemies = [
     {
         name: 'Ogro',
@@ -65,9 +66,7 @@ let enemies = [
 
 // ---------- FUNÇÕES ------------
 
-
-// FUNÇÕES DE ATAQUE DAS CLASSES
-
+// função que controla a geração do personagem de toda a rodada
 function createCharacter() {
 
     let valid = false // variavel para controlar que o usuário digite uma opção de classe Válida
@@ -148,15 +147,15 @@ function createCharacter() {
 
         switch (option) {
             case 1:
-                playerGenerated = {...wizard};
+                playerGenerated = { ...wizard };
                 valid = true;
                 break;
             case 2:
-                playerGenerated = {...burglar};
+                playerGenerated = { ...burglar };
                 valid = true;
                 break;
             case 3:
-                playerGenerated = {...warrior};
+                playerGenerated = { ...warrior };
                 valid = true;
                 break;
             default:
@@ -186,26 +185,29 @@ function createCharacter() {
 `);
 
     playerGenerated.playerName = name;
-    ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
+    lock()
     return playerGenerated;
 }
 
+// Função que gera um inimigo aleatório do array de inimigos
 function spawnEnemy(enemies) {
     let index = Math.floor(Math.random() * enemies.length);
 
-console.log(`
+    console.log(`
 \x1b[38;5;208myou will battle with:\x1b[0m
 \x1b[35m==================================================\x1b[0m
 \x1b[32m    Enemy: ${enemies[index].name}\x1b[0m
 \x1b[32m    Health: ${enemies[index].health}\x1b[0m
-\x1b[32m    Attack: ${enemies[index].min} ate ${enemies[index].max}\x1b[0m
+\x1b[32m    Attack: ${enemies[index].min} to ${enemies[index].max}\x1b[0m
 \x1b[35m==================================================\x1b[0m
 `);
-    ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
+    lock()
 
-    return {...enemies[index]};
+    return { ...enemies[index] };
 }
 
+// ========= 
+// Funções de ataque de cada classe:
 function attackWizard() { // Dano entre 10 e 20
     let damage = Math.floor(Math.random() * (20 - 10 + 1)) + 10;
     return damage;
@@ -221,6 +223,8 @@ function attackWarrior() { // Dano entre 8 e 15
     return damage;
 }
 
+// ========= 
+
 function enemyAttack(enemy) {
     return Math.floor(Math.random() * (enemy.max - enemy.min + 1)) + enemy.min;
 }
@@ -230,48 +234,76 @@ function attack(character, enemy) {
     let enemyDamage = enemy.enemyAttack(enemy);
 
 
-    
+
     console.clear()
-    console.log(`\x1b[34mVoce deu ${characterDamage} de dano em ${enemy.name}!\x1b[0m`);
+
+
+    console.log('\x1b[34m===================================================\x1b[0m');
+    console.log(`\x1b[34m⚔️  You dealt ${characterDamage} damage to ${enemy.name}! \x1b[0m`);
+    console.log('\x1b[34m===================================================\x1b[0m');
+
     enemy.health -= characterDamage;
 
     if (enemy.health > 0) {
-        console.log(`\x1b[32m${enemy.name} deu ${enemyDamage} de dano em voce!\x1b[0m`);
+
+        console.log('\x1b[32m===================================================\x1b[0m');
+        console.log(`\x1b[32m💥 ${enemy.name} dealt ${enemyDamage} damage to you! \x1b[0m`);
+        console.log('\x1b[32m===================================================\x1b[0m');
+
         character.health -= enemyDamage;
+
     } else {
-        console.log('\x1b[31mSeu golpe foi letal!\x1b[0m');
+
+        console.log('\x1b[31m===================================================\x1b[0m');
+        console.log('\x1b[31m☠️  Your attack was LETHAL! \x1b[0m');
+        console.log('\x1b[31m===================================================\x1b[0m');
+
     }
 }
 
+// função de rodada defensiva. Vai devidir o dano recebido por 2
 function defense(character, enemy) {
 
-    if(character.defense > 0){
+    if (character.defense > 0) {
 
-    character.defense -= 1;
+        character.defense -= 1;
 
-    console.clear()
+        console.clear();
 
-    console.log('\x1b[34mDefesa ativada! o dano do inimigo será recebido pela metade!\x1b[0m');
+        console.log('\x1b[34m============================================================\x1b[0m');
+        console.log('\x1b[34m🛡️  Defense activated! Enemy damage will be reduced by half! \x1b[0m');
+        console.log('\x1b[34m============================================================\x1b[0m');
 
-    let characterDamage = character.attack();
-    let enemyDamage = (enemy.enemyAttack(enemy));
+        let characterDamage = character.attack();
+        let enemyDamage = enemy.enemyAttack(enemy);
 
-    console.log(`\x1b[34mVoce deu ${characterDamage} de dano em ${enemy.name}!\x1b[0m`);
-    enemy.health -= characterDamage;
+        console.log('\x1b[32m===================================================\x1b[0m');
+        console.log(`\x1b[32m⚔️  You dealt ${characterDamage} damage to ${enemy.name}! \x1b[0m`);
+        console.log('\x1b[32m===================================================\x1b[0m');
 
-    console.log(`\x1b[31m${enemy.name} deu ${enemyDamage} de dano em voce, mas com sua defesa, o dano recebido foi ${Math.floor(enemyDamage / 2)}\x1b[0m`);
-    character.health -= Math.floor(enemyDamage / 2);
+        enemy.health -= characterDamage;
+
+        console.log('\x1b[31m===================================================\x1b[0m');
+        console.log(`\x1b[31m💥 ${enemy.name} dealt ${enemyDamage} damage to you! \x1b[0m`);
+        console.log(`\x1b[31m🛡️  Your defense reduced the damage to ${Math.floor(enemyDamage / 2)}! \x1b[0m`);
+        console.log('\x1b[31m===================================================\x1b[0m');
+
+        character.health -= Math.floor(enemyDamage / 2);
+
     } else {
-                console.log(`
-\x1b[35m==================================================\x1b[0m
+
+        console.log(`
+\x1b[35m===================================================\x1b[0m
 
         \x1b[31m❌ You have no defenses left!\x1b[0m
 
-\x1b[35m==================================================\x1b[0m
+\x1b[35m===================================================\x1b[0m
 `);
+
     }
 }
 
+// função para usar poção
 function usePotion(character) {
 
     console.clear();
@@ -293,7 +325,7 @@ function usePotion(character) {
 
 \x1b[35m==================================================\x1b[0m
 `);
-    
+
 
     } else {
 
@@ -307,13 +339,12 @@ function usePotion(character) {
     }
 }
 
-// função que vai receber um array de INIMIGOS e retornar o OBJETO do inimigo escolhido
-
-function combatMenu() { //Mostrar as opções do turno do jogador.
+//Mostrar as opções do turno do jogador.
+function combatMenu() {
 
     while (true) {
 
-console.log(`
+        console.log(`
 \x1b[33mAction against the enemy:\x1b[0m
 \x1b[33m1 - Attack\x1b[0m
 \x1b[33m2 - Defend\x1b[0m
@@ -339,6 +370,7 @@ console.log(`
     }
 }
 
+// função que controla todo o combate das rodadas do jogo
 function startCombat(character, enemy) {
 
 
@@ -347,12 +379,13 @@ function startCombat(character, enemy) {
 
     while (character.health > 0 && enemy.health > 0) {
 
-console.log(`
+        console.log(`
 \x1b[35m========================\x1b[0m
 \x1b[34m${character.playerName}: ${character.health} HP\x1b[0m
 \x1b[31m${enemy.name}: ${enemy.health} HP\x1b[0m
 \x1b[35m========================\x1b[0m
 \x1b[32mPotions: ${character.potion}\x1b[0m
+\x1b[32mDefenses: ${character.defense}\x1b[0m
 \x1b[35m========================\x1b[0m
 `);
 
@@ -360,7 +393,7 @@ console.log(`
 
         switch (option) {
 
-            case 1: 
+            case 1:
                 attack(character, enemy);
                 break;
 
@@ -373,7 +406,7 @@ console.log(`
                 break;
         }
 
-        ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
+        lock()
         console.clear();
     }
 
@@ -398,7 +431,7 @@ console.log(`
         ask.question('\x1b[33mPress ENTER for the next battle\x1b[0m');
     }
     if (vitory === 5) {
-console.log(`
+        console.log(`
 \x1b[34m====================================================\x1b[0m
 \x1b[32mALL THE ENEMIES IN YOUR JOURNEY HAVE BEEN DEFEATED!\x1b[0m
 \x1b[34m====================================================\x1b[0m
@@ -407,83 +440,9 @@ console.log(`
     }
 }
 
-// variável para controlar vitórias do jogador sobre os mosntros. Precisa ser 5 vitórias para encerrar o código
-let vitory = 0;
-
-
-while (true) {
-    
-    console.clear()
-    
+// função para mostrar regras do jogo
+function showGame() {
     console.log(`
-\x1b[35m==================================================\x1b[0m
-\x1b[33m           ⚔️ SHADOWS OF BACKBERRY ⚔️\x1b[0m
-\x1b[35m==================================================\x1b[0m
-
-            \x1b[32m[1] Start battle\x1b[0m
-
-            \x1b[32m[2] About opponents\x1b[0m
-
-            \x1b[32m[3] About the game\x1b[0m
-
-\x1b[35m==================================================\x1b[0m
-`);
-
-    let menu = Number(ask.question());
-
-    switch (menu) {
-        case 1:
-            
-            let character = createCharacter();
-            console.log('O jogo Começou!');
-
-            while (character.health > 0 && vitory < 5) {
-
-                console.clear();
-
-                let enemy = spawnEnemy(enemies);
-
-                startCombat(character, enemy);
-            }
-
-            if (character.health > 0) {
-                console.log('\x1b[32mParabéns, você venceu o jogo!\x1b[0m');
-                ask.question('press to continue..')
-            } else {
-                console.log('\x1b[31mGame Over!\x1b[0m');
-                ask.question('Press ENTER to continue...')
-
-                console.clear()
-                console.log(`
-                Do you want to play again?
-                    1 - YES
-                    2 - NO
-                    `)
-                let decision = Number(ask.question())
-                if (decision === 2){
-                    process.exit();
-                }
-            }
-            break;
-
-        case 2:
-
-            console.clear()
-            for (let enemy of enemies) {
-                console.log(`
-\x1b[35m==================================================\x1b[0m
-\x1b[34mOponente:\x1b[0m ${enemy.name.toUpperCase()}
-\x1b[34mVida:\x1b[0m ${enemy.health}
-\x1b[31mDano:\x1b[0m ${enemy.min} ate ${enemy.max}
-\x1b[35m==================================================\x1b[0m
-`);
-            }
-            ask.question('press ENTER to return to MENU..')
-            break;
-
-        case 3:
-            console.clear();
-            console.log(`
 \x1b[35m╔══════════════════════════════════════════════════════════════╗\x1b[0m
 \x1b[35m║\x1b[0m                    \x1b[34m⚔️  ABOUT THE GAME ⚔️\x1b[0m                       \x1b[35m║\x1b[0m
 \x1b[35m╚══════════════════════════════════════════════════════════════╝\x1b[0m
@@ -525,9 +484,129 @@ Recover +30 HP during battle.
 \x1b[35m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\x1b[0m
 
 `);
+}
+
+// função para travar o codigo e esperar o usuario apertar ENTER para continuar
+function lock() {
+    ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
+}
+
+function showEnemis() {
+    for (let enemy of enemies) {
+        console.log(`
+\x1b[35m==================================================\x1b[0m
+\x1b[34mEnemy:\x1b[0m ${enemy.name.toUpperCase()}
+\x1b[34mHealth:\x1b[0m ${enemy.health}
+\x1b[31mDamage:\x1b[0m ${enemy.min} to ${enemy.max}
+\x1b[35m==================================================\x1b[0m
+`);
+    }
+}
+
+// variável para controlar vitórias do jogador sobre os mosntros. Precisa ser 5 vitórias para encerrar o código
+let vitory = 0;
+
+while (true) {
+
+    console.clear()
+
+    console.log(`
+\x1b[35m==================================================\x1b[0m
+\x1b[33m           ⚔️ SHADOWS OF BACKBERRY ⚔️\x1b[0m
+\x1b[35m==================================================\x1b[0m
+
+            \x1b[32m[1] Start battle\x1b[0m
+
+            \x1b[32m[2] About opponents\x1b[0m
+
+            \x1b[32m[3] About the game\x1b[0m
+
+\x1b[35m==================================================\x1b[0m
+`);
+
+    let menu = Number(ask.question());
+
+    switch (menu) {
+        case 1:
+
+            let character = createCharacter();
+
+            while (character.health > 0 && vitory < 5) {
+
+                console.clear();
+
+                let enemy = spawnEnemy(enemies);
+                startCombat(character, enemy);
+            }
+
+            if (character.health > 0) {
+                console.log(`\x1b[33m
+              ___________
+             '._==_==_=_.'  
+             .-\\:      /-.
+            | (|:.      |) |
+             '-|:.      |-'
+               \\::.    /
+                '::. .'
+                  ) (
+                _.' '._
+        🏆     """"""""    🏆
+========================================
+          CHAMPION OF THE BATTLE
+========================================
+        
+\x1b[0m`);
+                lock()
+                console.clear()
+
+                console.log(`
+\x1b[33m========================================\x1b[0m
+\x1b[33m             PLAY AGAIN?               \x1b[0m
+\x1b[33m========================================\x1b[0m
+
+\x1b[33m[1] YES ⚔️\x1b[0m
+\x1b[33m[2] NO  🚪\x1b[0m
+
+\x1b[33m========================================\x1b[0m
+`);
+
+                let decision = Number(ask.question())
+                if (decision === 2) {
+                    process.exit();
+
+                } else {
+                    console.clear()
+                    console.log('\x1b[31mGame Over!\x1b[0m');
+                    lock()
+
+                    console.log(`
+\x1b[33m========================================\x1b[0m
+\x1b[33m             PLAY AGAIN?               \x1b[0m
+\x1b[33m========================================\x1b[0m
+
+\x1b[33m[1] YES ⚔️\x1b[0m
+\x1b[33m[2] NO  🚪\x1b[0m
+
+\x1b[33m========================================\x1b[0m
+`);
+
+                    let decision = Number(ask.question())
+                    if (decision === 2) {
+                        process.exit();
+                    }
+                }
+            }
+            break;
+        case 2:
+            console.clear();
+            showEnemis();
+            ask.question('\x1b[33mPress ENTER to return to menu...\x1b[0m');
+            break;
+        case 3:
+            console.clear();
+            showGame();
             ask.question('press ENTER to return to MENU..')
             break;
-
         default:
             ask.question('Invalid Option, press ENTER to return to MENU..')
             break;
