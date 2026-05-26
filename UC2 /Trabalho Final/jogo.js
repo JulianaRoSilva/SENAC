@@ -148,15 +148,15 @@ function createCharacter() {
 
         switch (option) {
             case 1:
-                playerGenerated = wizard;
+                playerGenerated = {...wizard};
                 valid = true;
                 break;
             case 2:
-                playerGenerated = burglar;
+                playerGenerated = {...burglar};
                 valid = true;
                 break;
             case 3:
-                playerGenerated = warrior;
+                playerGenerated = {...warrior};
                 valid = true;
                 break;
             default:
@@ -193,11 +193,14 @@ function createCharacter() {
 function spawnEnemy(enemies) {
     let index = Math.floor(Math.random() * enemies.length);
 
-    console.log(`
-    Inimigo da rodada: ${enemies[index].name}
-    Vida: ${enemies[index].health}
-    Ataque: ${enemies[index].min} ate ${enemies[index].max}
-        `);
+console.log(`
+\x1b[38;5;208myou will battle with:\x1b[0m
+\x1b[35m==================================================\x1b[0m
+\x1b[32m    Enemy: ${enemies[index].name}\x1b[0m
+\x1b[32m    Health: ${enemies[index].health}\x1b[0m
+\x1b[32m    Attack: ${enemies[index].min} ate ${enemies[index].max}\x1b[0m
+\x1b[35m==================================================\x1b[0m
+`);
     ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
 
     return {...enemies[index]};
@@ -229,28 +232,44 @@ function attack(character, enemy) {
 
     
     console.clear()
-    console.log(`Voce deu ${characterDamage} de dano em ${enemy.name}!`)
+    console.log(`\x1b[34mVoce deu ${characterDamage} de dano em ${enemy.name}!\x1b[0m`);
     enemy.health -= characterDamage;
 
     if (enemy.health > 0) {
-        console.log(`${enemy.name} deu ${enemyDamage} de dano em voce!`)
+        console.log(`\x1b[32m${enemy.name} deu ${enemyDamage} de dano em voce!\x1b[0m`);
         character.health -= enemyDamage;
     } else {
-        console.log('Seu golpe foi letal!')
+        console.log('\x1b[31mSeu golpe foi letal!\x1b[0m');
     }
 }
 
 function defense(character, enemy) {
+
+    if(character.defense > 0){
+
+    character.defense -= 1;
+
     console.clear()
-    console.log('Defesa ativada! o dano do inimigo será recebido pela metade!')
+
+    console.log('\x1b[34mDefesa ativada! o dano do inimigo será recebido pela metade!\x1b[0m');
+
     let characterDamage = character.attack();
     let enemyDamage = (enemy.enemyAttack(enemy));
 
-    console.log(`Voce deu ${characterDamage} de dano em ${enemy.name}!`)
+    console.log(`\x1b[34mVoce deu ${characterDamage} de dano em ${enemy.name}!\x1b[0m`);
     enemy.health -= characterDamage;
 
-    console.log(`${enemy.name} deu ${enemyDamage} de dano em voce, mas com sua defesa, o dano recebido foi ${Math.floor(enemyDamage / 2)}`)
-    character.health -= (Math.floor(enemyDamage / 2));
+    console.log(`\x1b[31m${enemy.name} deu ${enemyDamage} de dano em voce, mas com sua defesa, o dano recebido foi ${Math.floor(enemyDamage / 2)}\x1b[0m`);
+    character.health -= Math.floor(enemyDamage / 2);
+    } else {
+                console.log(`
+\x1b[35m==================================================\x1b[0m
+
+        \x1b[31m❌ You have no defenses left!\x1b[0m
+
+\x1b[35m==================================================\x1b[0m
+`);
+    }
 }
 
 function usePotion(character) {
@@ -292,30 +311,25 @@ function usePotion(character) {
 
 function combatMenu() { //Mostrar as opções do turno do jogador.
 
-    let valid = false;
+    while (true) {
 
-
-    while (!valid) {
-
-        console.log(`
-    Action against the enemy:
-    1 - Attack
-    2 - Defend
-    3 - Use Potion`)
+console.log(`
+\x1b[33mAction against the enemy:\x1b[0m
+\x1b[33m1 - Attack\x1b[0m
+\x1b[33m2 - Defend\x1b[0m
+\x1b[33m3 - Use Potion\x1b[0m
+`);
         let option = Number(ask.question());
         switch (option) {
             case 1:
                 valid = true;
-                return 1
-                break;
+                return 1;
             case 2:
                 valid = true;
-                return 2
-                break;
+                return 2;
             case 3:
                 valid = true;
                 return 3;
-                break;
             default:
                 console.clear()
                 console.log("invalid Option!");
@@ -329,23 +343,24 @@ function startCombat(character, enemy) {
 
 
     console.clear();
-    console.log(`Combat between ${character.playerName} and ${enemy.name} STARTED!`);
+    console.log(`\x1b[32mCombat between ${character.playerName} and ${enemy.name} STARTED!\x1b[0m`);
 
     while (character.health > 0 && enemy.health > 0) {
 
-        console.log(`
-========================
-${character.playerName}: ${character.health} HP
-${enemy.name}: ${enemy.health} HP
-Pocoes: ${character.potion}
-========================
+console.log(`
+\x1b[35m========================\x1b[0m
+\x1b[34m${character.playerName}: ${character.health} HP\x1b[0m
+\x1b[31m${enemy.name}: ${enemy.health} HP\x1b[0m
+\x1b[35m========================\x1b[0m
+\x1b[32mPotions: ${character.potion}\x1b[0m
+\x1b[35m========================\x1b[0m
 `);
 
         let option = combatMenu(); // menu de ações
 
         switch (option) {
 
-            case 1:
+            case 1: 
                 attack(character, enemy);
                 break;
 
@@ -358,7 +373,7 @@ Pocoes: ${character.potion}
                 break;
         }
 
-        ask.question('Press ENTER para continuar...');
+        ask.question('\x1b[33mPress ENTER to continue...\x1b[0m');
         console.clear();
     }
 
@@ -369,17 +384,30 @@ Pocoes: ${character.potion}
 
         qtdeEnemies++;
 
-        console.log(`${enemy.name} foi derrotado!`);
+        console.log(`
+\x1b[35m=====================================\x1b[0m
+\x1b[32m        Defeated monster!\x1b[0m
+\x1b[35m=====================================\x1b[0m
+\x1b[33mYou won the battle against:\x1b[0m
+\x1b[31m${enemy.name}\x1b[0m
+\x1b[35m=====================================\x1b[0m
+`);
         if (qtdeEnemies < 5) {
-            console.log(`Ainda faltam ${5 - qtdeEnemies}`)
+            console.log(`\x1b[33mThere are still ${5 - qtdeEnemies} battles left!\x1b[0m`);
         }
-        ask.question('Press ENTER para continuar...');
+        ask.question('\x1b[33mPress ENTER for the next battle\x1b[0m');
     }
     if (qtdeEnemies === 5) {
-        console.log('Todos os inimigos da sua jornada foram derrotados!')
-        ask.question('Press ENTER para continuar...');
+console.log(`
+\x1b[34m====================================================\x1b[0m
+\x1b[32mALL THE ENEMIES IN YOUR JOURNEY HAVE BEEN DEFEATED!\x1b[0m
+\x1b[34m====================================================\x1b[0m
+`);
+        ask.question('Press ENTER to continue...');
     }
 }
+
+
 
 
 let qtdeEnemies = 0;
@@ -508,10 +536,5 @@ Recover +30 HP during battle.
             break;
     }
 }
-
-
-
-
-
 
 
