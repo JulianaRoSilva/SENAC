@@ -291,7 +291,7 @@ function defense(character, enemy) {
         character.health -= Math.floor(enemyDamage / 2);
 
     } else {
-
+        console.clear()
         console.log(`
 \x1b[35m===================================================\x1b[0m
 
@@ -340,9 +340,21 @@ function usePotion(character) {
 }
 
 //Mostrar as opções do turno do jogador.
-function combatMenu() {
+function combatMenu(character, enemy) {
+
 
     while (true) {
+
+        console.log(`
+\x1b[35m========================\x1b[0m
+\x1b[34m${character.playerName}: ${character.health} HP\x1b[0m
+\x1b[31m${enemy.name}: ${enemy.health} HP\x1b[0m
+\x1b[35m========================\x1b[0m
+\x1b[32mPotions: ${character.potion}\x1b[0m
+\x1b[32mDefenses: ${character.defense}\x1b[0m
+\x1b[35m========================\x1b[0m
+`);
+
 
         console.log(`
 \x1b[33mAction against the enemy:\x1b[0m
@@ -353,18 +365,16 @@ function combatMenu() {
         let option = Number(ask.question());
         switch (option) {
             case 1:
-                valid = true;
                 return 1;
             case 2:
-                valid = true;
                 return 2;
             case 3:
-                valid = true;
                 return 3;
             default:
                 console.clear()
                 console.log("invalid Option!");
-                ask.question('Press ENTER for return to options...')
+                ask.question('Press ENTER for return to options...');
+                console.clear();
                 break;
         }
     }
@@ -379,17 +389,7 @@ function startCombat(character, enemy) {
 
     while (character.health > 0 && enemy.health > 0) {
 
-        console.log(`
-\x1b[35m========================\x1b[0m
-\x1b[34m${character.playerName}: ${character.health} HP\x1b[0m
-\x1b[31m${enemy.name}: ${enemy.health} HP\x1b[0m
-\x1b[35m========================\x1b[0m
-\x1b[32mPotions: ${character.potion}\x1b[0m
-\x1b[32mDefenses: ${character.defense}\x1b[0m
-\x1b[35m========================\x1b[0m
-`);
-
-        let option = combatMenu(); // menu de ações
+        let option = combatMenu(character, enemy); // menu de ações
 
         switch (option) {
 
@@ -404,16 +404,16 @@ function startCombat(character, enemy) {
             case 3:
                 usePotion(character);
                 break;
+            default:
+                ask.question('Invalid Option, press ENTER to return to MENU..')
+                break;
         }
 
         lock()
         console.clear();
     }
 
-    if (character.health <= 0) {
-        console.log('YOU DIED!');
-
-    } else if (vitory < 5) {
+    if (vitory < 5) {
 
         vitory++;
 
@@ -431,6 +431,7 @@ function startCombat(character, enemy) {
         ask.question('\x1b[33mPress ENTER for the next battle\x1b[0m');
     }
     if (vitory === 5) {
+        console.clear();
         console.log(`
 \x1b[34m====================================================\x1b[0m
 \x1b[32mALL THE ENEMIES IN YOUR JOURNEY HAVE BEEN DEFEATED!\x1b[0m
@@ -508,6 +509,7 @@ let vitory = 0;
 
 while (true) {
 
+
     console.clear()
 
     console.log(`
@@ -528,18 +530,19 @@ while (true) {
 
     switch (menu) {
         case 1:
-
+            vitory = 0;
             let character = createCharacter();
 
             while (character.health > 0 && vitory < 5) {
 
                 console.clear();
-
                 let enemy = spawnEnemy(enemies);
+
                 startCombat(character, enemy);
             }
 
             if (character.health > 0) {
+                console.clear();
                 console.log(`\x1b[33m
               ___________
              '._==_==_=_.'  
@@ -556,29 +559,19 @@ while (true) {
 ========================================
         
 \x1b[0m`);
+} else {
+
+    console.clear();
+
+    console.log(`
+\x1b[31m========================================\x1b[0m
+\x1b[31m              YOU DIED ☠️              \x1b[0m
+\x1b[31m========================================\x1b[0m
+`);
                 lock()
                 console.clear()
 
-                console.log(`
-\x1b[33m========================================\x1b[0m
-\x1b[33m             PLAY AGAIN?               \x1b[0m
-\x1b[33m========================================\x1b[0m
-
-\x1b[33m[1] YES ⚔️\x1b[0m
-\x1b[33m[2] NO  🚪\x1b[0m
-
-\x1b[33m========================================\x1b[0m
-`);
-
-                let decision = Number(ask.question())
-                if (decision === 2) {
-                    process.exit();
-
-                } else {
-                    console.clear()
-                    console.log('\x1b[31mGame Over!\x1b[0m');
-                    lock()
-
+            
                     console.log(`
 \x1b[33m========================================\x1b[0m
 \x1b[33m             PLAY AGAIN?               \x1b[0m
@@ -593,7 +586,7 @@ while (true) {
                     let decision = Number(ask.question())
                     if (decision === 2) {
                         process.exit();
-                    }
+                    
                 }
             }
             break;
@@ -608,7 +601,7 @@ while (true) {
             ask.question('press ENTER to return to MENU..')
             break;
         default:
-            ask.question('Invalid Option, press ENTER to return to MENU..')
+            ask.question('\x1b[33mInvalid option! Press ENTER to return to menu...\x1b[0m');
             break;
     }
 }
