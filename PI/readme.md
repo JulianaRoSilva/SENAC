@@ -2,6 +2,4 @@
   <img src="https://capsule-render.vercel.app/api?type=rounded&height=280&color=0:14532D,40:16A34A,100:2563EB&text=%F0%9F%90%BE%20PetLife&fontColor=ffffff&fontSize=72&animation=twinkling&fontAlignY=38&desc=Projeto%20Integrador%20%E2%80%A2%20SENAC%20%E2%80%A2%202026&descSize=23&descAlignY=60" />
 </p>
 
-<p align="center">
-  <strong>Controle completo da vida do seu pet 🐶🐱</strong>
-</p>
+
