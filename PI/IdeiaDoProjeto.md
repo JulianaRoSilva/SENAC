@@ -43,15 +43,15 @@ Quando o QR Code for escaneado, o usuário será direcionado diretamente para o 
 - Realização de exames
 - Possibilidade de anexar os PDFs dos exames
 - Possibilidade de lembrete de consultas
-- Etc. (isso ainda será definido de uma melhor forma)
+
+isso ainda será definido de uma melhor forma
 
 ### 5. Fóruns
 
 A ideia principal é gerar uma comunidade em que os usuários cadastrados poderão fazer posts nesses fóruns, como:
 
 - Animais perdidos
-- Fotos gerais
-- Etc.
+- Fotos dos seus animais
 
 Ainda será melhor pensada a ideia, mas o intuito é fazer uma página interativa.
 
@@ -62,10 +62,9 @@ Adicionar uma função de mapa em que será possível buscar:
 - Clínicas veterinárias
 - Banho e tosa
 - Locais para passeio
-- Etc.
 
 ---
 
 ## Descrição do Projeto
 
-A ideia do projeto é desenvolver um aplicativo com várias funcionalidades envolvendo a vida do seu pet. A principal ideia é a função **FindPet**, com geração de um QR Code por pet e controle de encontro ao escanear.
+A ideia do projeto é desenvolver um aplicativo com várias funcionalidades envolvendo a vida do seu pet. A principal ideia é a função **FindPet**, com geração de um QR Code por pet e controle de encontro ao escanear em que irá direcionar diretamente para a conversa no whatsapp do celular cadastrado do tutor do Pet.
