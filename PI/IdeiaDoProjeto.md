@@ -14,7 +14,10 @@ Criação de um aplicativo de controle do Pet.
 - E-mail
 - CPF
 - Número de telefone (WhatsApp)
+- Numero de telefone secundário
 - Data de nascimento
+- Endereço principal
+- Endereço segundário
 
 ### 2. Cadastro dos Pets do Tutor
 
@@ -24,6 +27,7 @@ Criação de um aplicativo de controle do Pet.
 - Peso
 - Idade
 - Foto de perfil
+- Endereço principal
 
 ### 3. Função **FindPet**
 
