@@ -357,6 +357,24 @@ ON j.id = p.id_jogador
 GROUP BY e.nome
 ORDER BY e.nome;
 
+-- 9
+
+SELECT
+    jogo.nome,
+    COUNT(partida.id) AS partidas
+FROM jogo
+INNER JOIN partida
+ON jogo.id = partida.id_jogo
+GROUP BY jogo.nome;
+
+-- 10
+
+SELECT jogador.nome, COUNT(participacao.id_partida) as qtdParticipacao
+FROM jogador
+INNER JOIN participacao
+ON jogador.id = participacao.id_jogador
+GROUP BY jogador.nome;
+
 -- 11
 
 SELECT j.id,j.nome,
