@@ -236,15 +236,16 @@ INSERT INTO participacao(id_partida,id_jogador,pontuacao) VALUES
 /*
 1. Quais jogadores pertencem a cada equipe?
 2. Quais partidas foram disputadas?
-Exiba:
 
+Exiba:
 jogo;
 data;
 rodada;
 participantes;
 pontuação obtida.
 
-3. Qual foi a pontuação total de cada equipe?
+3. Qual foi a pontuação total de cada equipe? 
+
 4. Qual é o ranking das equipes?
 5. Qual é o ranking dos jogadores?
 6. Qual foi a maior pontuação registrada em cada jogo?
@@ -263,4 +264,119 @@ pontuação total.
 Ordene os resultados da maior para a menor pontuação.
 */
 
+-- 1. Quais jogadores pertencem a cada equipe?
 
+SELECT *
+FROM equipes e
+INNER JOIN jogador j 
+ON e.id = j.id_equipes;
+
+--2. Quais partidas foram disputadas?
+
+SELECT 
+    jg.nome AS jogo,
+    c.data_inicio AS data,
+    j.nome AS participante,
+    p.pontuacao AS pontuacao_obtida
+	
+FROM participacao p
+
+INNER JOIN partida pt 
+ON p.id_partida = pt.id
+
+INNER JOIN jogo jg 
+ON pt.id_jogo = jg.id
+
+INNER JOIN campeonato c 
+ON pt.id_campeonato = c.id
+
+INNER JOIN jogador j 
+ON p.id_jogador = j.id;
+
+--3. Qual foi a pontuação total de cada equipe? 
+
+select equipes.id as equipeId, MAX(equipes.nome), SUM(p.pontuacao) from participacao p
+inner join jogador j on p.id_jogador = j.id
+inner join equipes on j.id_equipes = equipes.id
+group by equipes.id order by equipes.id
+
+-- 4. Qual é o ranking das equipes?
+
+select equipes.id as equipeId, MAX(equipes.nome), SUM(p.pontuacao) from participacao p
+inner join jogador j on p.id_jogador = j.id
+inner join equipes on j.id_equipes = equipes.id
+group by equipes.id order by SUM(p.pontuacao) desc;
+
+-- 5. Qual é o ranking dos jogadores?
+
+SELECT
+    jogador.nome,
+    SUM(participacao.pontuacao) AS pontos
+FROM jogador
+INNER JOIN participacao
+ON jogador.id_jogador = participacao.id_jogador
+GROUP BY jogador.nome
+ORDER BY pontos DESC;
+
+-- 6. Qual foi a maior pontuação registrada em cada jogo?
+
+SELECT
+    jogo.nome,
+    MAX(participacao.pontuacao) AS maior_pontuacao
+FROM jogo
+INNER JOIN partida
+    ON jogo.id = partida.id_jogo
+INNER JOIN participacao
+    ON partida.id = participacao.id_partida
+GROUP BY jogo.nome;
+
+--  7. Qual é a média de pontos obtida por cada equipe?
+
+SELECT
+    e.nome AS equipe,
+    AVG(p.pontuacao) AS media_pontos
+FROM equipes e
+INNER JOIN jogador j
+ON e.id = j.id_equipes
+INNER JOIN participacao p
+ON j.id = p.id_jogador
+GROUP BY e.nome
+ORDER BY media_pontos DESC;
+
+-- 8. Qual foi a menor e a maior pontuação obtida por cada equipe?
+
+SELECT
+    e.nome AS equipe,
+    MIN(p.pontuacao) AS menor_pontuacao,
+    MAX(p.pontuacao) AS maior_pontuacao
+FROM equipes e
+INNER JOIN jogador j
+ON e.id = j.id_equipes
+INNER JOIN participacao p
+ON j.id = p.id_jogador
+GROUP BY e.nome
+ORDER BY e.nome;
+
+-- 11
+
+SELECT j.id,j.nome,
+COUNT(p.id_partida) AS partidas
+FROM jogador j
+INNER JOIN participacao p
+ON j.id = p.id_jogador
+GROUP BY j.id, j.nome
+HAVING COUNT(p.id_partida) > 1
+ORDER BY partidas DESC;
+
+-- 12
+
+SELECT RANK() OVER (ORDER BY SUM(p.pontuacao) DESC) AS classificacao,j.nome AS jogador,e.nome AS equipe,
+SUM(p.pontuacao) AS total_pontos,
+COUNT(p.id_partida) AS partidas_disputadas
+FROM jogador j
+INNER JOIN equipes e
+ON j.id_equipes = e.id
+INNER JOIN participacao p
+ON j.id = p.id_jogador
+GROUP BY j.nome, e.nome
+ORDER BY classificacao;
