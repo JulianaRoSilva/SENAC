@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Spell_1 = require("./Spell");
+const Wizard_1 = require("./Wizard");
+const House_1 = require("./House");
+const house1 = new House_1.House('Lufa Lufa', 'Diane');
+const spellFire = new Spell_1.Spell('Fire', 15, 5);
+const spellWird = new Spell_1.Spell('Wird', 5, 3);
+const w = new Wizard_1.Wizard('Juliana', house1, 30);
+w.showLearnSpells();
+w.learnSpell(spellFire);
+w.learnSpell(spellWird);
+w.getSpell();
+// w.showLearnSpells();
