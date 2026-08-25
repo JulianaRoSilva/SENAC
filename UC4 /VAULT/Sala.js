@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sala = void 0;
 const node_console_1 = require("node:console");
-const Colors_1 = require("./Colors");
 const Auxiliares_1 = require("./Auxiliares");
 class Sala {
     name;
@@ -28,15 +27,15 @@ class Sala {
         }
         else {
             console.log('Essa sala já possui a quantidade maxima de moradores alocados!');
-            (0, Auxiliares_1.stop)();
+            stop();
         }
     }
     showInfo() {
         (0, node_console_1.clear)();
-        console.log(Colors_1.Colors.green(`========== ROOM ${this.name.toUpperCase()} ============`));
+        console.log((0, Auxiliares_1.green)(`========== ROOM ${this.name.toUpperCase()} ============`));
         console.log(`Quantity max: ${this.qtdMax}`);
         console.log(`Available positions: ${this.qtdMax - this.members.length}`);
-        console.log(Colors_1.Colors.green(`==========    MEMBERS    ============`));
+        console.log((0, Auxiliares_1.green)(`==========    MEMBERS    ============`));
         for (let member of this.members) {
             console.log(this.contador + ' - ' + member.getName());
             this.contador++;

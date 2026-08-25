@@ -1,7 +1,6 @@
 import { clear } from "node:console";
-import { Colors } from "./Colors";
 import { Morador } from "./Morador";
-import { stop } from "./Auxiliares";
+import { green } from "./Auxiliares";
 
 export class Sala {
     
@@ -44,10 +43,10 @@ export class Sala {
 	
 	clear();
 
-    console.log(Colors.green(`========== ROOM ${this.name.toUpperCase()} ============`));
+    console.log(green(`========== ROOM ${this.name.toUpperCase()} ============`));
 	console.log(`Quantity max: ${this.qtdMax}`);
     console.log(`Available positions: ${this.qtdMax - this.members.length}`);
-    console.log(Colors.green(`==========    MEMBERS    ============`));
+    console.log(green(`==========    MEMBERS    ============`));
         
         for(let member of this.members){
             console.log(this.contador + ' - ' + member.getName())
